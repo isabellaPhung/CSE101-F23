@@ -46,6 +46,40 @@ int main(int argc, char **argv){
     **/
     fclose(input);
 
-    
+    List sorted = newList();
+    append(sorted, 0);
+    moveFront(sorted);
+    //printf("line count: %d\n", lineCount);
+    //perform insertion sort
+    //printf("test: %d\n", get(sorted));
+    int testiterator = 0;
+    for(int i = 1; i < lineCount; i++){
+        //printf("i: %d\n", i);
+        while(1){
+            //printf("cursor index: %d\n", index(sorted));
+            if(index(sorted) == -1){
+                append(sorted, i);
+                break;
+            }
+            testiterator++;
+            //printf("iterator: %d\n", testiterator);
+            int compare = strcmp(strArray[get(sorted)], strArray[i]);
+            if( compare >= 0 ){//if belongs left or equivalent
+                insertBefore(sorted, i);
+                break;
+            }
+            
+            moveNext(sorted);
+        }
+        testiterator = 0;
+        moveFront(sorted);
+    }
+    //printList(stdout, sorted); 
+
+    moveFront(sorted);
+    for(int i = 0; i < lineCount; i++){
+        fprintf(stdout, "%s", strArray[get(sorted)]);
+        moveNext(sorted);
+    }
     return 0;
 }
