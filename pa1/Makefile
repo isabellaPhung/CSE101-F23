@@ -8,11 +8,11 @@
 # make checkLex          checks Lex for memory errors
 #------------------------------------------------------------------------------
 
-#Lex : Lex.o List.o
-#	gcc -std=c17 -Wall -o Lex Lex.o List.o
+Lex : Lex.o List.o
+	gcc -std=c17 -Wall -o Lex Lex.o List.o
 
-#Lex.o : Lex.c List.h
-#	gcc -std=c17 -Wall -c Lex.c
+Lex.o : Lex.c List.h
+	gcc -std=c17 -Wall -c Lex.c
 
 ListClient: ListClient.o List.o
 	gcc -std=c17 -Wall -o ListClient ListClient.o List.o

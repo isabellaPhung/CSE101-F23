@@ -97,11 +97,10 @@ int length(List L){
 //returns index of cursor element if defined
 //returns -1 otherwise
 int index(List L){
-    if(L->cursor != NULL && L != NULL){
+    if( L != NULL && L->cursor != NULL){
         return(L->cursorIndex);
-    }else{
-        return(-1);
-    }
+    }    
+    return(-1);
 }
 
 // front()
@@ -486,7 +485,7 @@ void printList(FILE* out, List L){
    Node N = NULL;
 
    if( L==NULL ){
-      printf("List Error: calling printList) on NULL List reference\n");
+      printf("List Error: calling printList() on NULL List reference\n");
       exit(EXIT_FAILURE);
    }
 
