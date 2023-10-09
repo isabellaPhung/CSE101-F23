@@ -4,27 +4,24 @@
 //-----------------------------------------------------------------------------
 #ifndef LIST_H_INCLUDE_
 #define LIST_H_INCLUDE_
-#include<stdbool.h>
+#include <stdbool.h>
+#include <stdio.h>
 
-
-#define FORMAT "%d"  // format string for ListElement
-
+#define FORMAT "%d" // format string for ListElement
 
 // Exported types -------------------------------------------------------------
 typedef int ListElement;
-typedef struct ListObj* List;
-
+typedef struct ListObj *List;
 
 // Constructors-Destructors ---------------------------------------------------
 
 // newList()
-// Returns reference to new empty List object. 
+// Returns reference to new empty List object.
 List newList();
 
 // freeList()
 // Frees all heap memory associated with List *pL, and sets *pL to NULL.
-void freeList(List* pL);
-
+void freeList(List *pL);
 
 // Access functions -----------------------------------------------------------
 
@@ -32,8 +29,8 @@ void freeList(List* pL);
 // Returns the length of L.
 int length(List L);
 
-//index()
-//Returns index of cursor element if defined, -1 otherwise
+// index()
+// Returns index of cursor element if defined, -1 otherwise
 int index(List L);
 
 // front()
@@ -41,14 +38,14 @@ int index(List L);
 // Pre: !isEmpty(L)
 ListElement front(List L);
 
-//back()
-//Returns value at back of L.
-//Pre: !isEmpty(L)
+// back()
+// Returns value at back of L.
+// Pre: !isEmpty(L)
 ListElement back(List L);
 
-//get()
-//Returns cursor element of L.
-//Pre: !isEmpty(L), index()>=0
+// get()
+// Returns cursor element of L.
+// Pre: !isEmpty(L), index()>=0
 ListElement get(List L);
 
 // equals()
@@ -79,22 +76,22 @@ void moveFront(List L);
 // otherwise does nothing.
 void moveBack(List L);
 
-//movePrev()
-//If cursor is defined and not at front,
-//move cursor 1 step toward front
-//If cursor at front, set cursor undefined
-//if cursor undefined, do nothing
+// movePrev()
+// If cursor is defined and not at front,
+// move cursor 1 step toward front
+// If cursor at front, set cursor undefined
+// if cursor undefined, do nothing
 void movePrev(List L);
 
-//moveNext()
-//If cursor is defined and not at back,
-//move cursor 1 step toward back
-//if cursor is at back, set cursor undefined
-//if cursor undefined, do nothing
+// moveNext()
+// If cursor is defined and not at back,
+// move cursor 1 step toward back
+// if cursor is at back, set cursor undefined
+// if cursor undefined, do nothing
 void moveNext();
 
-//prepend()
-//If list is non-empty, insert element before front element
+// prepend()
+// If list is non-empty, insert element before front element
 void prepend(List L, ListElement x);
 
 // append()
@@ -121,21 +118,20 @@ void deleteFront(List L);
 // Pre: !isEmpty(L)
 void deleteBack(List L);
 
-//delete()
-//Delete cursor element, makes cursor undefined
+// delete()
+// Delete cursor element, makes cursor undefined
 void delete(List L);
 
 // Other Functions ------------------------------------------------------------
 
 // printList()
-// Prints a string representation of L consisting of a space separated list, with front on left 
-// of ints to file out.
-void printList(FILE* out, List L);
+// Prints a string representation of L consisting of a space separated list,
+// with front on left of ints to file out.
+void printList(FILE *out, List L);
 
 // copyList()
 // Returns new list representing same integer sequence as L
-//new list cursor is undefined, state of L unchanged
+// new list cursor is undefined, state of L unchanged
 List copyList(List L);
-
 
 #endif

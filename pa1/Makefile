@@ -1,3 +1,9 @@
+# Isabella Phung
+# Student ID: 1702285
+# Assignment: pa1
+# for CSE 101 Fall 2023
+# contains code written by instructor
+
 #------------------------------------------------------------------------------
 # Makefile for CSE 101 Programming Assignment 1
 #
@@ -6,6 +12,7 @@
 # make clean             removes all binaries
 # make checkClient       checks ListClient for memory errors
 # make checkLex          checks Lex for memory errors
+# make format            formats program according to clang-15 formatting
 #------------------------------------------------------------------------------
 
 Lex : Lex.o List.o
@@ -27,9 +34,11 @@ clean :
 	rm -f Lex ListClient Lex.o ListClient.o List.o
 
 checkClient : 
-	valgrind --leak-check=full ListClient
+	valgrind --leak-check=full ./ListClient
 
 checkLex :
-	valgrind --leak-check=full Lex in3 blah3
+	valgrind --leak-check=full ./Lex in3 blah3
 
+format :
+	clang-format-15 -i -style=file *.[ch]
 
