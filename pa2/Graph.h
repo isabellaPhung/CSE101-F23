@@ -1,3 +1,8 @@
+// Isabella Phung
+// Student ID: 1702285
+// Assignment: pa2
+// for CSE 101 Fall 2023
+
 #pragma once
 
 #ifndef GRAPH_H_INCLUDE_

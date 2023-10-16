@@ -1,3 +1,9 @@
+# Isabella Phung
+# Student ID: 1702285
+# Assignment: pa2
+# for CSE 101 Fall 2023
+# contains code written by instructor
+
 #------------------------------------------------------------------------------
 #  Makefile for CMPS 101 Programming Assignment 2
 #
@@ -6,6 +12,7 @@
 #  make clean               removes binaries
 #  make checkFind           tests FindPath for memory leaks on in7
 #  make checkClient         tests GraphClient for memory leaks
+#  make format              formats code to clang-15 format standards
 #------------------------------------------------------------------------------
 
 BASE_SOURCES   = Graph.c List.c

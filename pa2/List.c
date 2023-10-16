@@ -504,7 +504,11 @@ void printList(FILE *out, List L) {
   }
 
   for (N = L->front; N != NULL; N = N->next) {
-    fprintf(out, FORMAT " ", N->data);
+    if(N->next != NULL){
+        fprintf(out, FORMAT " ", N->data);
+    }else{
+        fprintf(out, FORMAT, N->data);
+    }
   }
   fprintf(out, "\n");
 }
