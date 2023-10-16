@@ -1,97 +1,303 @@
-#include<Graph.h>
-#include<stdio.h>
+#include "Graph.h"
+#include "List.h"
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // private GraphObj type, denoted with Graph
 typedef struct GraphObj {
-    int order;
-    int size;
-    //allocated array of Lists
+  int order;
+  int size;
+  List *adj;
+  char *colors;
+  int *parents;
+  int *d;
+  int s;
 } GraphObj;
 
+/*** Constructors-Destructors ***/
 
-/*** Constructors-Destructors ***/ 
+// returns Graph pointing to GraphObj
+// has n verticies and no edges
+Graph newGraph(int n) {
+  Graph G;
+  G = malloc(sizeof(GraphObj));
+  assert(G != NULL); // checks allocation is not null
+  G->order = n;
+  G->size = NIL;
 
-//returns Graph pointing to GraphObj
-//has n verticies and no edges
-Graph newGraph(int n){
-    //set order and size
-    //allocate memory for Lists
+  G->adj = calloc(G->order + 1, sizeof(List *));
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    G->adj[i] = newList();
+  } // array of Lists: nieghbors of i
+
+  G->colors = calloc(G->order + 1, sizeof(char)); // array of chars w, g, b
+  // initializes all verticies as white
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    G->colors[i] = 'w';
+  }
+
+  G->parents =
+      calloc(G->order + 1,
+             sizeof(int)); // ith element is the parent of the int element
+  // initializes all parents as NIL
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    G->parents[i] = NIL;
+  }
+
+  G->d = calloc(G->order + 1, sizeof(int)); // distance to recent source
+  // init distances
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    G->d[i] = INF;
+  }
+
+  G->s = NIL; // source vertex
+  return G;
 }
 
-//frees all heap memory associated with Graph *pG
-//and sets *pG to NULL
-void freeGraph(Graph* pG){
-    //free array of Lists
-    //set pointer to null
-}
- 
-/*** Access functions ***/ 
-
-//returns order of Graph G
-int getOrder(Graph G){
-
-}
-
-//returns size of Graph G
-int getSize(Graph G){
-
-}
-
-//returns source vertex most recently used in BFS()
-//or NIL if BFS() not called yet
-int getSource(Graph G){
-
+// frees all heap memory associated with Graph *pG
+// and sets *pG to NULL
+void freeGraph(Graph *pG) {
+  if (pG != NULL && *pG != NULL) { // checks if Graph is empty
+    for (int i = 1; i < (*pG)->order + 1; i++) {
+      freeList(&((*pG)->adj[i]));
+    }
+    free((*pG)->adj);
+    (*pG)->adj = NULL;
+    free((*pG)->colors);
+    (*pG)->colors = NULL;
+    free((*pG)->parents);
+    (*pG)->parents = NULL;
+    free((*pG)->d);
+    (*pG)->d = NULL;
+    free(*pG);
+    *pG = NULL; // dereferences pG and pointer to null
+  }
 }
 
-//returns parent of vertex u used in BFS()
-//or NIL if BFS() not called yet
-//Pre: 1<=u<=getOrder(g)
-int getParent(Graph G, int u){
+/*** Access functions ***/
 
+// returns order of Graph G
+int getOrder(Graph G) {
+  if (G == NULL) {
+    printf("Graph Error: calling getOrder() on NULL Graph.\n");
+    exit(EXIT_FAILURE);
+  }
+  return G->order;
 }
 
-//returns distance from most recent BFS source to vertex u
-//or INF if BFS() not called yet
-//Pre: 1<=u<=getOrder(g)
-int getDist(Graph G, int u){
-
+// returns size of Graph G
+int getSize(Graph G) {
+  if (G == NULL) {
+    printf("Graph Error: calling getSize() on NULL Graph.\n");
+    exit(EXIT_FAILURE);
+  }
+  return G->size;
 }
 
-//appends to List L verticies of shortest path in G to u
-//or appends NIL to L if no path exists
-//Pre: getSource(G) != NIL (BFS must have been called)
-//Pre: 1<=u<=getOrder(g)
-void getPath(List L, Graph G, int u){
-
-}
- 
-/*** Manipulation procedures ***/ 
-
-//deletes all edges of G
-void makeNull(Graph G){
-
+// returns source vertex most recently used in BFS()
+// or NIL if BFS() not called yet
+int getSource(Graph G) {
+  if (G == NULL) {
+    printf("Graph Error: calling getSource() on NULL Graph.\n");
+    exit(EXIT_FAILURE);
+  }
+  return G->s;
 }
 
-//inserts new edge connecting u and v
-//Pre: 1<=u,v<=getOrder(G)
-void addEdge(Graph G, int u, int v){
-    //u added to adjacency list of v, v added to adjacency of u
-//inserts new directed edge from u to v
+// returns parent of vertex u used in BFS()
+// or NIL if BFS() not called yet
+// Pre: 1<=u<=getOrder(g)
+int getParent(Graph G, int u) {
+  if (G == NULL) {
+    printf("Graph Error: calling getParent() on NULL Graph.\n");
+    exit(EXIT_FAILURE);
+  }
+  if (u < 1 || u > getOrder(G)) {
+    printf("Graph Error: calling getParent() when u does not meet "
+           "preconditons. Given u must be 1<=u<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
+  return G->parents[u];
 }
 
-//Pre: 1<=u,v<=getOrder(G)
-void addArc(Graph G, int u, int v){
-//u added to adjacency list of v
+// returns distance from most recent BFS source to vertex u
+// or INF if BFS() not called yet
+// Pre: 1<=u<=getOrder(g)
+int getDist(Graph G, int u) {
+  if (G == NULL) {
+    printf("Graph Error: calling getDist() on NULL Graph.\n");
+    exit(EXIT_FAILURE);
+  }
+  if (u < 1 || u > getOrder(G)) {
+    printf("Graph Error: calling getDist() when u does not meet preconditons. "
+           "Given u must be 1<=u<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
+  return G->d[u];
 }
 
-//runs BFS algorithm on Graph G with source s
-//sets color, distance, parent, and source fields
-void BFS(Graph G, int s){
+// appends to List L verticies of shortest path in G to u
+// or appends NIL to L if no path exists
+// Pre: getSource(G) != NIL (BFS must have been called)
+// Pre: 1<=u<=getOrder(g)
+void getPath(List L, Graph G, int u) {
+  if (u < 1 || u > getOrder(G)) {
+    printf("Graph Error: calling getPath() when u does not meet preconditons. "
+           "Given u must be 1<=u<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
 
+  if (G->s == u) {
+    append(L, G->s);
+  } else if (G->parents[u] == NIL) {
+    append(L, NIL);
+  } else {
+    getPath(L, G, G->parents[u]);
+    append(L, u);
+  }
 }
- 
-/*** Other operations ***/ 
-//prints adjacency list representation of G to file out
-void printGraph(FILE* out, Graph G){
 
+/*** Manipulation procedures ***/
+
+// deletes all edges of G
+void makeNull(Graph G) {
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    G->adj[i] = NULL;
+  }
+}
+
+// inserts new edge connecting u and v
+// maintains vertex order
+// Pre: 1<=u,v<=getOrder(G)
+void addEdge(Graph G, int u, int v) {
+  if (u < 1 || u > getOrder(G)) {
+    printf("Graph Error: calling addEdge() when u does not meet preconditons. "
+           "Given u must be 1<=u<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
+  if (v < 1 || v > getOrder(G)) {
+    printf("Graph Error: calling addEdge() when v does not meet preconditons. "
+           "Given v must be 1<=v<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
+
+  // inserting v into u's adj list
+  // checking for appropriate place
+  if (length(G->adj[u]) == 0) { // if u has no adj
+    append(G->adj[u], v);
+  } else {
+    moveFront(G->adj[u]);
+    while(1){
+      if (index(G->adj[u]) == -1) { // if at end of u's adj, append
+        append(G->adj[u], v);
+        break;
+      } else if (v <= get(G->adj[u])) { // if before cursor, insert before
+        insertBefore(G->adj[u], v);
+        break;
+      }
+      moveNext(G->adj[u]);
+    }
+  }
+
+  // inserting u into v's adj list
+  // checking for appropriate place
+  if (length(G->adj[v]) == 0) { // if v has no adj
+    append(G->adj[v], u);
+  } else {
+    moveFront(G->adj[v]);
+    while(1) {
+      if (index(G->adj[v]) == -1) { // if at end of v's adj, append
+        append(G->adj[v], u);
+        break;
+      } else if (u <= get(G->adj[v])) { // if before cursor, insert before
+        insertBefore(G->adj[v], u);
+        break;
+      }
+      moveNext(G->adj[v]);
+    };
+  }
+
+  G -> size++;
+  // u added to adjacency list of v, v added to adjacency of u
+}
+
+// Pre: 1<=u,v<=getOrder(G)
+void addArc(Graph G, int u, int v) {
+  if (u < 1 || u > getOrder(G)) {
+    printf("Graph Error: calling addEdge() when u does not meet preconditons. "
+           "Given u must be 1<=u<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
+  if (v < 1 || v > getOrder(G)) {
+    printf("Graph Error: calling addEdge() when v does not meet preconditons. "
+           "Given v must be 1<=v<=getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
+
+  // inserting v into u's adj list
+  // checking for appropriate place
+  if (length(G->adj[u]) == 0) { // if u has no adj
+    append(G->adj[u], v);
+  } else {
+    moveFront(G->adj[u]);
+    while (1){
+      if (index(G->adj[u]) == -1) { // if at end of u's adj, append
+        append(G->adj[u], v);
+        break;
+      } else if (v <= get(G->adj[u])) { // if before cursor, insert before
+        insertBefore(G->adj[u], v);
+        break;
+      }
+      moveNext(G->adj[u]);
+    }
+  }
+  G -> size++;
+}
+
+// runs BFS algorithm on Graph G with source s
+// sets color, distance, parent, and source fields
+void BFS(Graph G, int s) {
+  G -> s = s;
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    G->colors[i] = 'w';
+    G->d[i] = INF;
+    G->parents[i] = NIL;
+  }
+  G->colors[G->s] = 'g';
+  G->d[G->s] = 0;
+  G->parents[s] = NIL;
+  List Q = newList();
+  append(Q, s);
+  int x;
+  while (length(Q) != 0) {
+    moveFront(Q);
+    x = get(Q);
+    deleteFront(Q);
+    
+    //maybe do a check here to see if adj list is empty
+    int y;
+    moveFront(G->adj[x]);
+    while(index(G->adj[x])!=-1){
+      y = get(G->adj[x]);
+      if (G->colors[y] == 'w') {
+        G->colors[y] = 'g';
+        G->d[y] = G->d[x] + 1;
+        G->parents[y] = x;
+        append(Q, y);
+      }
+      moveNext(G->adj[x]);
+    }
+    G->colors[x] = 'b';
+  } 
+  freeList(&Q);
+}
+
+/*** Other operations ***/
+// prints adjacency list representation of G to file out
+void printGraph(FILE *out, Graph G) {
+  for (int i = 1; i < ((G->order) + 1); i++) {
+    fprintf(out, "%d: ", i);
+    printList(out, G->adj[i]);
+  }
 }

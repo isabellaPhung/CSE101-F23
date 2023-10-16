@@ -506,7 +506,7 @@ void printList(FILE *out, List L) {
   for (N = L->front; N != NULL; N = N->next) {
     fprintf(out, FORMAT " ", N->data);
   }
-  printf("\n");
+  fprintf(out, "\n");
 }
 
 // copyList()
