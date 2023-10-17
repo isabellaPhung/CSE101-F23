@@ -1,7 +1,10 @@
-// Isabella Phung
-// Student ID: 1702285
-// Assignment: pa2
-// for CSE 101 Fall 2023
+/***
+* Isabella Phung
+* itphung
+* 2023 Fall CSE 101 PA2
+* Graph.c
+* Implementation of Graph ADT
+***/
 
 #include "Graph.h"
 #include "List.h"

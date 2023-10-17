@@ -1,7 +1,10 @@
-// Isabella Phung
-// Student ID: 1702285
-// Assignment: pa2
-// for CSE 101 Fall 2023
+/***
+* Isabella Phung
+* itphung
+* 2023 Fall CSE 101 PA2
+* FindPath.c
+* Client program for Graph ADT that makes graphs from files
+***/
 
 #include "Graph.h"
 

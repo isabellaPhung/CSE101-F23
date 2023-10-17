@@ -1,8 +1,10 @@
-// Isabella Phung
-// Student ID: 1702285
-// Assignment: pa1
-// for CSE 101 Fall 2023
-// contains code from examples provided by instructor
+/***
+* Isabella Phung
+* itphung
+* 2023 Fall CSE 101 PA2
+* List.c
+* Implementation of List ADT
+***/
 
 //-----------------------------------------------------------------------------
 // List.c
