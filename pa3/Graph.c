@@ -1,10 +1,10 @@
 /***
-* Isabella Phung
-* itphung
-* 2023 Fall CSE 101 PA3
-* Graph.c
-* Implementation of Graph ADT
-***/
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA3
+ * Graph.c
+ * Implementation of Graph ADT
+ ***/
 
 #include "Graph.h"
 #include "List.h"
@@ -62,18 +62,16 @@ Graph newGraph(int n) {
   }
 
   G->s = NIL; // source vertex
-  
-  G->discover =
-      calloc(G->order + 1,
-             sizeof(int)); // stores discover time for DFS
+
+  G->discover = calloc(G->order + 1,
+                       sizeof(int)); // stores discover time for DFS
   // initializes all discover time as undef
   for (int i = 1; i < ((G->order) + 1); i++) {
     G->discover[i] = UNDEF;
   }
-    
-  G->finish =
-      calloc(G->order + 1,
-             sizeof(int)); // stores finish time for DFS
+
+  G->finish = calloc(G->order + 1,
+                     sizeof(int)); // stores finish time for DFS
   // initializes all finish time as undef
   for (int i = 1; i < ((G->order) + 1); i++) {
     G->finish[i] = UNDEF;
@@ -128,7 +126,7 @@ int getSize(Graph G) {
 // returns discover time of vertex u in G
 // or NIL if DFS() not called yet
 // Pre: 1<=u<=getOrder(G)
-int getDiscover(Graph G, int u){
+int getDiscover(Graph G, int u) {
   if (G == NULL) {
     printf("Graph Error: calling getDiscover() on NULL Graph.\n");
     exit(EXIT_FAILURE);
@@ -144,7 +142,7 @@ int getDiscover(Graph G, int u){
 // returns finish time of vertex u in G
 // or NIL if DFS() not called yet
 // Pre: 1<=u<=getOrder(G)
-int getFinish(Graph G, int u){
+int getFinish(Graph G, int u) {
   if (G == NULL) {
     printf("Graph Error: calling getFinish() on NULL Graph.\n");
     exit(EXIT_FAILURE);
@@ -250,7 +248,7 @@ void addEdge(Graph G, int u, int v) {
     append(G->adj[u], v);
   } else {
     moveFront(G->adj[u]);
-    while(1){
+    while (1) {
       if (index(G->adj[u]) == -1) { // if at end of u's adj, append
         append(G->adj[u], v);
         break;
@@ -268,7 +266,7 @@ void addEdge(Graph G, int u, int v) {
     append(G->adj[v], u);
   } else {
     moveFront(G->adj[v]);
-    while(1) {
+    while (1) {
       if (index(G->adj[v]) == -1) { // if at end of v's adj, append
         append(G->adj[v], u);
         break;
@@ -280,7 +278,7 @@ void addEdge(Graph G, int u, int v) {
     };
   }
 
-  G -> size++;
+  G->size++;
   // u added to adjacency list of v, v added to adjacency of u
 }
 
@@ -303,7 +301,7 @@ void addArc(Graph G, int u, int v) {
     append(G->adj[u], v);
   } else {
     moveFront(G->adj[u]);
-    while (1){
+    while (1) {
       if (index(G->adj[u]) == -1) { // if at end of u's adj, append
         append(G->adj[u], v);
         break;
@@ -314,46 +312,46 @@ void addArc(Graph G, int u, int v) {
       moveNext(G->adj[u]);
     }
   }
-  G -> size++;
+  G->size++;
+}
+
+int Visit(Graph G, int x, int time) {
+  G->discover[x] = ++time;
+  G->colors[x] = 'g';
+  front(G->adj[x]);
+  int y = 0;
+  while (index(G->adj[x]) != -1) {
+    y = get(G->adj[x]);
+    if (G->colors[y] == 'w') {
+    G->parents[y] = x;
+      Visit(G, y, time);
+    }
+    moveNext(G->adj[x]);
+  }
+  G->colors[x] = 'b';
+  G->finish[x] = ++time;
+  return time;
 }
 
 // runs BFS algorithm on Graph G with source s
 // sets color, distance, parent, and source fields
-void DFS(Graph G, List s){
+void DFS(Graph G, List s) {
   for (int i = 1; i < ((G->order) + 1); i++) {
     G->colors[i] = 'w';
     G->parents[i] = NIL;
   }
   int time = 0;
   for (int i = 1; i < ((G->order) + 1); i++) {
-    if(color[i] == 'w'){
-        time = Visit(G, i, time);
+    if (G->colors[i] == 'w') {
+      time = Visit(G, i, time);
     }
   }
-}
-
-int Visit(Graph G, int x, int time){
-    discover[x] = ++time;
-    color[x] = 'g';
-    front(G->adj[x]);
-    int y = 0;
-    while(index(G->adj[x]) != -1){
-        y = get(G->adj[x]);
-        if(color[y]=='w'){
-            parent[y] = x;
-            Visit(G, y, time);
-        }
-        moveNext(G->adj[vertex]);
-    }
-    color[x] = 'b';
-    finish[x] = ++time
-    return time;
 }
 
 // runs BFS algorithm on Graph G with source s
 // sets color, distance, parent, and source fields
 void BFS(Graph G, int s) {
-  G -> s = s;
+  G->s = s;
   for (int i = 1; i < ((G->order) + 1); i++) {
     G->colors[i] = 'w';
     G->d[i] = INF;
@@ -369,11 +367,11 @@ void BFS(Graph G, int s) {
     moveFront(Q);
     x = get(Q);
     deleteFront(Q);
-    
-    //maybe do a check here to see if adj list is empty
+
+    // maybe do a check here to see if adj list is empty
     int y;
     moveFront(G->adj[x]);
-    while(index(G->adj[x])!=-1){
+    while (index(G->adj[x]) != -1) {
       y = get(G->adj[x]);
       if (G->colors[y] == 'w') {
         G->colors[y] = 'g';
@@ -384,32 +382,32 @@ void BFS(Graph G, int s) {
       moveNext(G->adj[x]);
     }
     G->colors[x] = 'b';
-  } 
+  }
   freeList(&Q);
 }
 
 /*** Other operations ***/
-//transposes given graph
-Graph transpose(Graph G){
+// transposes given graph
+Graph transpose(Graph G) {
   Graph D = newGraph(G->order);
   for (int i = 1; i < ((G->order) + 1); i++) {
     front(G->adj[i]);
-    while(index(G->adj[i]) != -1){
-        addArc(get(G->adj[i]), i);
-        moveNext(G->adj[i]);
+    while (index(G->adj[i]) != -1) {
+      addArc(G, get(G->adj[i]), i);
+      moveNext(G->adj[i]);
     }
   }
   return D;
 }
 
-//creates identical copy of given graph
-Graph copyGraph(Graph G){
+// creates identical copy of given graph
+Graph copyGraph(Graph G) {
   Graph D = newGraph(G->order);
   for (int i = 1; i < ((G->order) + 1); i++) {
     front(G->adj[i]);
-    while(index(G->adj[i]) != -1){
-        addArc(i, get(G->adj[i]));
-        moveNext(G->adj[i]);
+    while (index(G->adj[i]) != -1) {
+      addArc(G, i, get(G->adj[i]));
+      moveNext(G->adj[i]);
     }
   }
   return D;

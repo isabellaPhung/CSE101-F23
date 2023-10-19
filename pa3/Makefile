@@ -39,3 +39,6 @@ checkFind : FindComponents
 
 checkClient : GraphClient
 	$(MEMCHECK) GraphClient
+
+format :
+	clang-format-15 -i -style=file *.[ch]

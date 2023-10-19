@@ -1,10 +1,10 @@
 /***
-* Isabella Phung
-* itphung
-* 2023 Fall CSE 101 PA3
-* Graph.h
-* Header file for Graph ADT
-***/
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA3
+ * Graph.h
+ * Header file for Graph ADT
+ ***/
 
 #pragma once
 
@@ -95,10 +95,10 @@ void BFS(Graph G, int s);
 void DFS(Graph G, List s);
 
 /*** Other operations ***/
-//transposes given graph
+// transposes given graph
 Graph transpose(Graph G);
 
-//creates identical copy of given graph
+// creates identical copy of given graph
 Graph copyGraph(Graph G);
 
 // prints adjacency list representation of G to file out

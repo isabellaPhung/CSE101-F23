@@ -1,10 +1,10 @@
 /***
-* Isabella Phung
-* itphung
-* 2023 Fall CSE 101 PA3
-* List.h
-* Header file for List ADT
-***/
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA3
+ * List.h
+ * Header file for List ADT
+ ***/
 
 //-----------------------------------------------------------------------------
 // List.h

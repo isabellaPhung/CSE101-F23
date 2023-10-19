@@ -1,10 +1,10 @@
 /***
-* Isabella Phung
-* itphung
-* 2023 Fall CSE 101 PA3
-* List.c
-* Implementation of List ADT
-***/
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA3
+ * List.c
+ * Implementation of List ADT
+ ***/
 
 //-----------------------------------------------------------------------------
 // List.c
@@ -506,10 +506,10 @@ void printList(FILE *out, List L) {
   }
 
   for (N = L->front; N != NULL; N = N->next) {
-    if(N->next != NULL){
-        fprintf(out, FORMAT " ", N->data);
-    }else{
-        fprintf(out, FORMAT, N->data);
+    if (N->next != NULL) {
+      fprintf(out, FORMAT " ", N->data);
+    } else {
+      fprintf(out, FORMAT, N->data);
     }
   }
   fprintf(out, "\n");
