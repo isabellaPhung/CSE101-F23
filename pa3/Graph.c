@@ -315,37 +315,60 @@ void addArc(Graph G, int u, int v) {
   G->size++;
 }
 
-int Visit(Graph G, int x, int time) {
+int Visit(Graph G, int x, int time, List s) {
   G->discover[x] = ++time;
-  G->colors[x] = 'g';
-  front(G->adj[x]);
-  int y = 0;
-  while (index(G->adj[x]) != -1) {
-    y = get(G->adj[x]);
-    if (G->colors[y] == 'w') {
-    G->parents[y] = x;
-      Visit(G, y, time);
-    }
-    moveNext(G->adj[x]);
+  if(length(G->adj[x]) != 0){
+      G->colors[x] = 'g';
+      moveFront(G->adj[x]);
+      int y = 0;
+      while (index(G->adj[x]) != -1) {
+        y = get(G->adj[x]);
+        if (G->colors[y] == 'w') {
+        G->parents[y] = x;
+          time = Visit(G, y, time, s);
+        }
+        moveNext(G->adj[x]);
+      }
   }
   G->colors[x] = 'b';
   G->finish[x] = ++time;
+  prepend(s, x);
   return time;
 }
 
-// runs BFS algorithm on Graph G with source s
+// runs DFS algorithm on Graph G with stack list s
 // sets color, distance, parent, and source fields
+// Pre: length(s) == getOrder(G)
 void DFS(Graph G, List s) {
+  if(length(s) != getOrder(G)){
+    printf("Graph Error: calling DFS() when s does not meet preconditons. "
+           "Length(s) must equal getOrder(G).\n");
+    exit(EXIT_FAILURE);
+  }
   for (int i = 1; i < ((G->order) + 1); i++) {
     G->colors[i] = 'w';
     G->parents[i] = NIL;
   }
   int time = 0;
-  for (int i = 1; i < ((G->order) + 1); i++) {
-    if (G->colors[i] == 'w') {
-      time = Visit(G, i, time);
+  int z = 0;
+  if(length(s) != 0){
+    moveFront(s);
+    for (int i = 1; i < ((G->order) + 1); i++) {
+        z = get(s);
+        delete(s);
+        if (G->colors[z] == 'w') {
+          time = Visit(G, z, time, s);
+        }
+        moveFront(s);
+    }
+  }else{
+    for (int i = 1; i < ((G->order) + 1); i++) {
+        if (G->colors[i] == 'w') {
+          time = Visit(G, i, time, s);
+        }
     }
   }
+  
 }
 
 // runs BFS algorithm on Graph G with source s
@@ -391,11 +414,13 @@ void BFS(Graph G, int s) {
 Graph transpose(Graph G) {
   Graph D = newGraph(G->order);
   for (int i = 1; i < ((G->order) + 1); i++) {
-    front(G->adj[i]);
-    while (index(G->adj[i]) != -1) {
-      addArc(G, get(G->adj[i]), i);
-      moveNext(G->adj[i]);
-    }
+    if(length(G->adj[i])!= 0){
+        moveFront(G->adj[i]);
+        while (index(G->adj[i]) != -1) {
+          addArc(D, get(G->adj[i]), i);
+          moveNext(G->adj[i]);
+        }
+     }
   }
   return D;
 }
@@ -404,11 +429,14 @@ Graph transpose(Graph G) {
 Graph copyGraph(Graph G) {
   Graph D = newGraph(G->order);
   for (int i = 1; i < ((G->order) + 1); i++) {
-    front(G->adj[i]);
-    while (index(G->adj[i]) != -1) {
-      addArc(G, i, get(G->adj[i]));
-      moveNext(G->adj[i]);
+    if(length(G->adj[i])!= 0){
+        moveFront(G->adj[i]);
+        while (index(G->adj[i]) != -1) {
+            addArc(D, i, get(G->adj[i]));
+            moveNext(G->adj[i]);
+        }
     }
+    
   }
   return D;
 }
