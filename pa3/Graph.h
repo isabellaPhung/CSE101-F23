@@ -1,7 +1,7 @@
 /***
 * Isabella Phung
 * itphung
-* 2023 Fall CSE 101 PA2
+* 2023 Fall CSE 101 PA3
 * Graph.h
 * Header file for Graph ADT
 ***/
@@ -16,6 +16,7 @@
 
 #define INF -1
 #define NIL 0
+#define UNDEF -1
 
 typedef struct GraphObj *Graph;
 
@@ -37,12 +38,27 @@ int getOrder(Graph G);
 // returns size of Graph G
 int getSize(Graph G);
 
+// returns parent of vertex u in G
+// or NIL if DFS() not called yet
+// Pre: 1<=u<=getOrder(G)
+int getParent(Graph G, int u);
+
+// returns discover time of vertex u in G
+// or NIL if DFS() not called yet
+// Pre: 1<=u<=getOrder(G)
+int getDiscover(Graph G, int u);
+
+// returns finish time of vertex u in G
+// or NIL if DFS() not called yet
+// Pre: 1<=u<=getOrder(G)
+int getFinish(Graph G, int u);
+
 // returns source vertex most recently used in BFS()
 // or NIL if BFS() not called yet
 int getSource(Graph G);
 
-// returns parent of vertex u used in BFS()
-// or NIL if BFS() not called yet
+// returns parent of vertex u used in BFS() or DFS()
+// or NIL if BFS() and DFS() have not been called yet
 // Pre: 1<=u<=getOrder(g)
 int getParent(Graph G, int u);
 
@@ -74,7 +90,17 @@ void addArc(Graph G, int u, int v);
 // sets color, distance, parent, and source fields
 void BFS(Graph G, int s);
 
+// runs DFS algorithm on Graph G with List S
+// sets discover, color, parent and finish fields
+void DFS(Graph G, List s);
+
 /*** Other operations ***/
+//transposes given graph
+Graph transpose(Graph G);
+
+//creates identical copy of given graph
+Graph copyGraph(Graph G);
+
 // prints adjacency list representation of G to file out
 void printGraph(FILE *out, Graph G);
 
