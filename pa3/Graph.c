@@ -223,7 +223,7 @@ void getPath(List L, Graph G, int u) {
 // deletes all edges of G
 void makeNull(Graph G) {
   for (int i = 1; i < ((G->order) + 1); i++) {
-    G->adj[i] = NULL;
+    clear(G->adj[i]);
   }
 }
 
