@@ -1,10 +1,11 @@
 /***
-* Isabella Phung
-* itphung
-* 2023 Fall CSE 101 PA3
-* FindComponents.c
-* Client program for Graph ADT that makes graphs from files and finds connected components
-***/
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA3
+ * FindComponents.c
+ * Client program for Graph ADT that makes graphs from files and finds connected
+ *components
+ ***/
 
 #include "Graph.h"
 
@@ -30,18 +31,60 @@ int main(int argc, char **argv) {
   int verticies = 0;
   fscanf(input, "%d", &verticies);
   Graph G = newGraph(verticies);
-  //printf("verticies: %d", getOrder(G));
+  // printf("verticies: %d", getOrder(G));
   int origin = -1;
   int termina = -1;
   fscanf(input, "%d %d", &origin, &termina);
   while (origin != 0) {
-    //printf("O-T: %d %d\n", origin, termina);
+    // printf("O-T: %d %d\n", origin, termina);
     addArc(G, origin, termina);
     fscanf(input, "%d %d", &origin, &termina);
   }
   printGraph(output, G);
 
+  // create s list
+  List s = newList();
+  for (int i = 1; i < getOrder(G) + 1; i++) {
+    append(s, i);
+  }
+  DFS(G, s);
+
+  Graph GT = transpose(G);
+
+  DFS(GT, s);
+
+  // need to count the number of components
+  int componentCount = 0;
+  moveBack(s);
+  while (index(s) != -1) {
+    if (getParent(GT, get(s)) == NIL) {
+      componentCount++;
+    }
+    movePrev(s);
+  }
+
+  fprintf(output, "\n");
+  fprintf(output, "G contains %d strongly connected components:\n",
+          componentCount);
+
+  moveBack(s);
+  List temp = newList();
+  for (int i = 1; i <= componentCount; i++) {
+    fprintf(output, "Component %d: ", i);
+    prepend(temp, get(s));
+    while (getParent(GT, get(s)) != NIL && index(s) != -1) {
+      movePrev(s);
+      prepend(temp, get(s));
+    }
+    printList(output, temp);
+    clear(temp);
+    movePrev(s);
+  }
+
+  freeList(&s);
+  freeList(&temp);
   freeGraph(&G);
+  freeGraph(&GT);
   fclose(input);
   fclose(output);
   return 0;

@@ -94,11 +94,11 @@ void freeGraph(Graph *pG) {
     (*pG)->parents = NULL;
     free((*pG)->d);
     (*pG)->d = NULL;
-    free(*pG);
     free((*pG)->discover);
     (*pG)->discover = NULL;
     free((*pG)->finish);
     (*pG)->finish = NULL;
+    free(*pG);
     *pG = NULL; // dereferences pG and pointer to null
   }
 }
@@ -247,6 +247,7 @@ void addEdge(Graph G, int u, int v) {
   if (length(G->adj[u]) == 0) { // if u has no adj
     append(G->adj[u], v);
   } else {
+
     moveFront(G->adj[u]);
     while (1) {
       if (index(G->adj[u]) == -1) { // if at end of u's adj, append
@@ -265,6 +266,7 @@ void addEdge(Graph G, int u, int v) {
   if (length(G->adj[v]) == 0) { // if v has no adj
     append(G->adj[v], u);
   } else {
+
     moveFront(G->adj[v]);
     while (1) {
       if (index(G->adj[v]) == -1) { // if at end of v's adj, append
@@ -300,6 +302,16 @@ void addArc(Graph G, int u, int v) {
   if (length(G->adj[u]) == 0) { // if u has no adj
     append(G->adj[u], v);
   } else {
+    // check if arc already exists
+    moveFront(G->adj[u]);
+    while (index(G->adj[u]) != -1) {
+      if (v == get(G->adj[u])) {
+        return;
+      }
+      moveNext(G->adj[u]);
+    }
+
+    // if doesn't already exist, add
     moveFront(G->adj[u]);
     while (1) {
       if (index(G->adj[u]) == -1) { // if at end of u's adj, append
@@ -317,22 +329,26 @@ void addArc(Graph G, int u, int v) {
 
 int Visit(Graph G, int x, int time, List s) {
   G->discover[x] = ++time;
-  if(length(G->adj[x]) != 0){
-      G->colors[x] = 'g';
-      moveFront(G->adj[x]);
-      int y = 0;
-      while (index(G->adj[x]) != -1) {
-        y = get(G->adj[x]);
-        if (G->colors[y] == 'w') {
+  if (length(G->adj[x]) != 0) {
+    G->colors[x] = 'g';
+    moveFront(G->adj[x]);
+    int y = 0;
+    while (index(G->adj[x]) != -1) {
+      y = get(G->adj[x]);
+      if (G->colors[y] == 'w') {
         G->parents[y] = x;
-          time = Visit(G, y, time, s);
-        }
-        moveNext(G->adj[x]);
+        time = Visit(G, y, time, s);
       }
+      moveNext(G->adj[x]);
+    }
   }
   G->colors[x] = 'b';
   G->finish[x] = ++time;
-  prepend(s, x);
+  if (index(s) != -1) {
+    insertAfter(s, x);
+  } else {
+    prepend(s, x);
+  }
   return time;
 }
 
@@ -340,7 +356,7 @@ int Visit(Graph G, int x, int time, List s) {
 // sets color, distance, parent, and source fields
 // Pre: length(s) == getOrder(G)
 void DFS(Graph G, List s) {
-  if(length(s) != getOrder(G)){
+  if (length(s) != getOrder(G)) {
     printf("Graph Error: calling DFS() when s does not meet preconditons. "
            "Length(s) must equal getOrder(G).\n");
     exit(EXIT_FAILURE);
@@ -351,24 +367,22 @@ void DFS(Graph G, List s) {
   }
   int time = 0;
   int z = 0;
-  if(length(s) != 0){
-    moveFront(s);
+  moveBack(s);
+  if (length(s) != 0) {
     for (int i = 1; i < ((G->order) + 1); i++) {
-        z = get(s);
-        delete(s);
-        if (G->colors[z] == 'w') {
-          time = Visit(G, z, time, s);
-        }
-        moveFront(s);
+      z = front(s);
+      deleteFront(s);
+      if (G->colors[z] == 'w') {
+        time = Visit(G, z, time, s);
+      }
     }
-  }else{
+  } else {
     for (int i = 1; i < ((G->order) + 1); i++) {
-        if (G->colors[i] == 'w') {
-          time = Visit(G, i, time, s);
-        }
+      if (G->colors[i] == 'w') {
+        time = Visit(G, i, time, s);
+      }
     }
   }
-  
 }
 
 // runs BFS algorithm on Graph G with source s
@@ -414,13 +428,13 @@ void BFS(Graph G, int s) {
 Graph transpose(Graph G) {
   Graph D = newGraph(G->order);
   for (int i = 1; i < ((G->order) + 1); i++) {
-    if(length(G->adj[i])!= 0){
-        moveFront(G->adj[i]);
-        while (index(G->adj[i]) != -1) {
-          addArc(D, get(G->adj[i]), i);
-          moveNext(G->adj[i]);
-        }
-     }
+    if (length(G->adj[i]) != 0) {
+      moveFront(G->adj[i]);
+      while (index(G->adj[i]) != -1) {
+        addArc(D, get(G->adj[i]), i);
+        moveNext(G->adj[i]);
+      }
+    }
   }
   return D;
 }
@@ -429,14 +443,13 @@ Graph transpose(Graph G) {
 Graph copyGraph(Graph G) {
   Graph D = newGraph(G->order);
   for (int i = 1; i < ((G->order) + 1); i++) {
-    if(length(G->adj[i])!= 0){
-        moveFront(G->adj[i]);
-        while (index(G->adj[i]) != -1) {
-            addArc(D, i, get(G->adj[i]));
-            moveNext(G->adj[i]);
-        }
+    if (length(G->adj[i]) != 0) {
+      moveFront(G->adj[i]);
+      while (index(G->adj[i]) != -1) {
+        addArc(D, i, get(G->adj[i]));
+        moveNext(G->adj[i]);
+      }
     }
-    
   }
   return D;
 }
