@@ -64,3 +64,6 @@ $(ADT1)Check: $(ADT1_TEST)
 
 $(ADT2)Check: $(ADT2_TEST)
 	$(MEMCHECK) $(ADT2_TEST)
+
+format :
+	clang-format-15 -i -style=file *.[ch]
