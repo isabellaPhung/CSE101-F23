@@ -15,10 +15,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define FORMAT "%d" // format string for ListElement
+//#define FORMAT "%d" // format string for ListElement
 
 // Exported types -------------------------------------------------------------
-typedef int ListElement;
+typedef void* ListElement;
 typedef struct ListObj *List;
 
 // Constructors-Destructors ---------------------------------------------------
@@ -58,7 +58,7 @@ ListElement get(List L);
 
 // equals()
 // Returns true if A is same int sequence as B, false otherwise.
-bool equals(List A, List B);
+//bool equals(List A, List B);
 
 // isEmpty()
 // Returns true if L is empty, otherwise returns false.
@@ -135,11 +135,11 @@ void delete(List L);
 // printList()
 // Prints a string representation of L consisting of a space separated list,
 // with front on left of ints to file out.
-void printList(FILE *out, List L);
+//void printList(FILE *out, List L);
 
 // copyList()
 // Returns new list representing same integer sequence as L
 // new list cursor is undefined, state of L unchanged
-List copyList(List L);
+//List copyList(List L);
 
 #endif

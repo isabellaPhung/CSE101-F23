@@ -1,7 +1,7 @@
 /***
  * Isabella Phung
  * itphung
- * 2023 Fall CSE 101 PA3
+ * 2023 Fall CSE 101 PA4
  * List.c
  * Implementation of List ADT
  ***/
@@ -157,6 +157,7 @@ ListElement get(List L) {
   return (L->cursor->data);
 }
 
+/**
 // equals()
 // Returns true if A is same int sequence as B, false otherwise.  bool
 // equals(List A, List B){
@@ -179,6 +180,7 @@ bool equals(List A, List B) {
   }
   return eq;
 }
+**/
 
 // isEmpty()
 // Returns true if L is empty, otherwise returns false.
@@ -207,7 +209,7 @@ void clear(List L) {
 // set()
 // Overwrites cursor element data with x
 // Pre: !isEmpty(), index() >= 0
-void set(List L, int x) {
+void set(List L, void* x) {
   if (L == NULL) { // checks if empty list
     printf("List Error: calling set() on NULL List reference\n");
     exit(EXIT_FAILURE); // exits out of program
@@ -497,6 +499,7 @@ void delete(List L) {
 // printList()
 // Prints a string representation of L consisting of a space separated list
 // of ints to indicated file out.
+/**
 void printList(FILE *out, List L) {
   Node N = NULL;
 
@@ -507,14 +510,16 @@ void printList(FILE *out, List L) {
 
   for (N = L->front; N != NULL; N = N->next) {
     if (N->next != NULL) {
-      fprintf(out, FORMAT " ", N->data);
+      fprintf(out, "%d ", *(int*)N->data);
     } else {
-      fprintf(out, FORMAT, N->data);
+      fprintf(out, "%d", *(int*)N->data);
     }
   }
   fprintf(out, "\n");
 }
+**/
 
+/**
 // copyList()
 // Returns new List representing same integer sequence as given L.
 // Cursor in new list undefined. L is unchanged.
@@ -535,3 +540,4 @@ List copyList(List L) {
   }
   return B;
 }
+**/
