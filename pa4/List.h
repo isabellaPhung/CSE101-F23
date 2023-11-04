@@ -56,10 +56,6 @@ ListElement back(List L);
 // Pre: !isEmpty(L), index()>=0
 ListElement get(List L);
 
-// equals()
-// Returns true if A is same int sequence as B, false otherwise.
-// bool equals(List A, List B);
-
 // isEmpty()
 // Returns true if L is empty, otherwise returns false.
 bool isEmpty(List L);
@@ -129,17 +125,5 @@ void deleteBack(List L);
 // delete()
 // Delete cursor element, makes cursor undefined
 void delete(List L);
-
-// Other Functions ------------------------------------------------------------
-
-// printList()
-// Prints a string representation of L consisting of a space separated list,
-// with front on left of ints to file out.
-// void printList(FILE *out, List L);
-
-// copyList()
-// Returns new list representing same integer sequence as L
-// new list cursor is undefined, state of L unchanged
-// List copyList(List L);
 
 #endif

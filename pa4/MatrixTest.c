@@ -1,3 +1,11 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA4
+ * MatrixTest.c
+ * Test file for Matrix ADT
+ ***/
+
 #include "Matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +29,7 @@ int main(int argc, char *argv[]) {
       changeEntry(M, i, j, k);
     }
   }
-  
+
   printf("Sum Test:\n");
   Matrix Y = sum(M, M);
   printMatrix(stdout, Y);

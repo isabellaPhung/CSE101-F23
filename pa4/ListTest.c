@@ -1,3 +1,11 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA4
+ * ListTest.c
+ * Tester program for List ADT
+ ***/
+
 #include "List.h"
 #include <stdio.h>
 #include <stdlib.h>

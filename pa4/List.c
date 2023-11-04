@@ -3,7 +3,7 @@
  * itphung
  * 2023 Fall CSE 101 PA4
  * List.c
- * Implementation of List ADT
+ * Implementation of List ADT that stores any data type
  ***/
 
 //-----------------------------------------------------------------------------
@@ -156,31 +156,6 @@ ListElement get(List L) {
   }
   return (L->cursor->data);
 }
-
-/**
-// equals()
-// Returns true if A is same int sequence as B, false otherwise.  bool
-// equals(List A, List B){
-bool equals(List A, List B) {
-  if (A == NULL || B == NULL) {
-    printf("List Error: calling equals() on NULL List reference\n");
-    exit(EXIT_FAILURE);
-  }
-
-  bool eq;
-  Node N, M;
-
-  eq = (A->length == B->length);
-  N = A->front;
-  M = B->front;
-  while (eq && N != NULL) {
-    eq = (N->data == M->data);
-    N = N->next;
-    M = M->next;
-  }
-  return eq;
-}
-**/
 
 // isEmpty()
 // Returns true if L is empty, otherwise returns false.
@@ -493,51 +468,3 @@ void delete(List L) {
     freeNode(&N);
   }
 }
-
-// Other Functions ------------------------------------------------------------
-
-// printList()
-// Prints a string representation of L consisting of a space separated list
-// of ints to indicated file out.
-/**
-void printList(FILE *out, List L) {
-  Node N = NULL;
-
-  if (L == NULL) {
-    printf("List Error: calling printList() on NULL List reference\n");
-    exit(EXIT_FAILURE);
-  }
-
-  for (N = L->front; N != NULL; N = N->next) {
-    if (N->next != NULL) {
-      fprintf(out, "%d ", *(int*)N->data);
-    } else {
-      fprintf(out, "%d", *(int*)N->data);
-    }
-  }
-  fprintf(out, "\n");
-}
-**/
-
-/**
-// copyList()
-// Returns new List representing same integer sequence as given L.
-// Cursor in new list undefined. L is unchanged.
-List copyList(List L) {
-  if (L == NULL) {
-    printf("List Error: calling copyList() on NULL List reference\n");
-    exit(EXIT_FAILURE);
-  }
-
-  List B = newList();
-  if (isEmpty(L)) {
-    return B;
-  }
-  Node N = L->front;
-  for (int i = 0; i < L->length; i++) {
-    append(B, N->data);
-    N = N->next;
-  }
-  return B;
-}
-**/
