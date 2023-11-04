@@ -209,7 +209,7 @@ void clear(List L) {
 // set()
 // Overwrites cursor element data with x
 // Pre: !isEmpty(), index() >= 0
-void set(List L, void* x) {
+void set(List L, void *x) {
   if (L == NULL) { // checks if empty list
     printf("List Error: calling set() on NULL List reference\n");
     exit(EXIT_FAILURE); // exits out of program

@@ -128,9 +128,10 @@ int equals(Matrix A, Matrix B){
     Entry entryA;
     Entry entryB;
     for(int i = 1; i < size(A)+1; i++){
+        //printf("hi\n");
         moveFront(A->row[i]);
         moveFront(B->row[i]);
-        while(index(A->row[i]) != -1){
+        while(index(A->row[i]) != -1 && index(B->row[i]) != -1 ){
             entryA = get(A->row[i]);
             entryB = get(B->row[i]);
             if(entryA->col != entryB->col || entryA->data != entryB->data){
@@ -147,7 +148,6 @@ int equals(Matrix A, Matrix B){
 // Manipulation procedures  
  
 void printList(FILE *out, List L) {
-
   if (L == NULL) {
     printf("List Error: calling printList() on NULL List reference\n");
     exit(EXIT_FAILURE);
@@ -260,27 +260,49 @@ List sumDiff(List A, List B, int isAdd){
     Entry entryA;
     Entry entryB;
 
-    //if both have items
     moveFront(A);
     moveFront(B);
-    double total = 0;
-    while(index(A)!=-1 || index(B)!= -1){
-       if(index(A)!= -1){
-            entryA = get(A);
-       }
-       if(index(B)!=-1){
-            entryB = get(B);
-       }
 
-       if(index(B)==-1 || entryA -> col < entryB -> col){
-            entry = newEntry(entryA->col, entryA->data);
-            append(sum, entry);
-            moveNext(A);
-       }else if (index(A)==-1 || entryA -> col > entryB -> col){
+    //if either lists are empty,
+    //copy contents of other list into sum
+    if(length(A)==0){
+        while(index(B)!=-1){
+            entryB = get(B);
             entry = newEntry(entryB->col, isAdd*(entryB->data));
             append(sum, entry);
             moveNext(B);
-       }else if (entryA -> col == entryB -> col){
+        }
+        return sum;
+    }
+
+    if(length(B)==0){
+        while(index(A)!=-1){
+            entryA = get(A);
+            entry = newEntry(entryA->col, entryA->data);
+            append(sum, entry);
+            moveNext(A);
+        }
+        return sum;
+    }
+    
+    //neither lists are empty
+    double total = 0;
+    while(index(A)!=-1 && index(B)!= -1){
+       entryA = get(A);
+       entryB = get(B);
+       //printf("List A: ");
+       //printList(stdout, A);
+       //printf("List B: ");
+       //printList(stdout, B);
+       if(entryA -> col < entryB -> col){
+            entry = newEntry(entryA->col, entryA->data);
+            append(sum, entry);
+            moveNext(A);
+       }else if (entryA -> col > entryB -> col){
+            entry = newEntry(entryB->col, isAdd*(entryB->data));
+            append(sum, entry);
+            moveNext(B);
+       }else {
             total = entryA->data + isAdd*(entryB->data);
             if(total != 0){ //only append to sum if total isn't 0
                 entry = newEntry(entryA->col, total);
@@ -290,7 +312,27 @@ List sumDiff(List A, List B, int isAdd){
             moveNext(B);
        }
     }
-    
+
+    //if we finished with extra remaining entries
+    //at the end of any lists
+    while(index(A)!=-1){
+        entryA = get(A);
+        entry = newEntry(entryA->col, entryA->data);
+        append(sum, entry);
+        moveNext(A);
+    }
+     
+    while(index(B)!=-1){
+        //printList(stdout, B);
+
+        entryB = get(B);
+        //printf("B index: %d entry B col: %d data: %lf\n", index(B), entryB->col, entryB->data);
+        entry = newEntry(entryB->col, isAdd*(entryB->data));
+        append(sum, entry);
+        moveNext(B);
+    }
+    //printf("\n");
+
     return sum;
 }
  
@@ -371,11 +413,25 @@ Matrix sum(Matrix A, Matrix B){
         printf("Matrix Error: calling sum() on matricies of different sizes.\n");
         exit(EXIT_FAILURE);
     }
+    Matrix RH = B;
+    int isDifferent = 1;
+    if(equals(A, B)==1){
+        RH = copy(B);
+        isDifferent = 0;
+    }
     Matrix C = newMatrix(size(A));
-    for(int i = 1; i < size(B)+1; i++){
+    for(int i = 1; i < size(RH)+1; i++){
+        //printf("A row:");
+        //printList(stdout, A->row[i]);
+        //printf("B row:");
+        //printList(stdout, RH->row[i]);
+
         freeList(&(C->row[i]));
-        C->row[i]=sumDiff(A->row[i], B->row[i], 1);
+        C->row[i]=sumDiff(A->row[i], RH->row[i], 1);
         C->nnz+=length(C->row[i]);
+    }
+    if(!isDifferent){
+        freeMatrix(&RH);
     }
     return C;
 }
@@ -388,11 +444,22 @@ Matrix diff(Matrix A, Matrix B){
         printf("Matrix Error: calling diff() on matricies of different sizes.\n");
         exit(EXIT_FAILURE);
     }
+
+    Matrix RH = B;
+    int isDifferent = 1;
+    if(equals(A, B)==1){
+        RH = copy(B);
+        isDifferent = 0;
+    }
+
     Matrix C = newMatrix(size(A));
-    for(int i = 1; i < size(B)+1; i++){
+    for(int i = 1; i < size(RH)+1; i++){
         freeList(&(C->row[i]));
-        C->row[i]=sumDiff(A->row[i], B->row[i], -1); 
+        C->row[i]=sumDiff(A->row[i], RH->row[i], -1); 
         C->nnz+=length(C->row[i]);
+    }
+    if(!isDifferent){
+        freeMatrix(&RH);
     }
     return C;
 }
@@ -407,6 +474,7 @@ Matrix product(Matrix A, Matrix B){
     }
     double data;
     Entry entry;
+
     Matrix C = newMatrix(size(A));
     Matrix BT = transpose(B);
     for(int i = 1; i<size(BT)+1;i++){
