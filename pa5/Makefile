@@ -9,10 +9,10 @@
 #------------------------------------------------------------------------------
 
 Shuffle : Shuffle.o List.o
-	g++ -std=c++17 -Wall -o Shuffle Shuffle.o List.o 
+	g++ -std=c++17 -g -Wall -o Shuffle Shuffle.o List.o 
 
 Shuffle.o : List.h Shuffle.cpp
-	g++ -std=c++17 -Wall -c Shuffle.cpp
+	g++ -std=c++17 -g -Wall -c Shuffle.cpp
 
 ListTest : ListTest.o List.o
 	g++ -std=c++17 -g -Wall -o ListTest ListTest.o List.o 

@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // List.cpp
-// Implementation file for Queue ADT
+// Implementation file for List ADT
 //-----------------------------------------------------------------------------
 #include<iostream>
 #include<string>
@@ -53,6 +53,8 @@ List::List(const List& L){
 // Destructor
 List::~List(){
     clear();
+    delete frontDummy;
+    delete backDummy;
 }
 
    // Access functions --------------------------------------------------------
@@ -354,15 +356,19 @@ List::~List(){
    // Returns a new List consisting of the elements of this List, followed by
    // the elements of L. The cursor in the returned List will be at postion 0.
    List List::concat(const List& L) const{
-        List* M = new List(*this);
-        Node* N = L.frontDummy;
-        M->moveBack();
+        List M;
+        Node* N = this->backDummy->prev;
+        while( N->prev!=nullptr ){
+            M.insertAfter(N->data);
+            N = N->prev;
+        }
+        N = L.frontDummy;
         while(N->next != L.backDummy){
             N = N->next;
-            M->insertBefore(N->data);
+            M.insertBefore(N->data);
         }
-        M->moveFront();
-        return *M;
+        M.moveFront();
+        return M;
    }
 
    // to_string()
@@ -371,7 +377,7 @@ List::~List(){
    std::string List::to_string() const{
         Node* N = nullptr;
         std::string s = "(";
-        N=frontDummy;
+        N=frontDummy;;
         while(N->next!=backDummy){
             N=N->next;
             if(N->next != backDummy){
