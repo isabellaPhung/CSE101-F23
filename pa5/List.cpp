@@ -41,11 +41,14 @@ List::List(const List& L){
    num_elements = 0;
 
    // load elements of L into this L
-   Node* N = L.backDummy->prev;
-   while( N->prev!=nullptr ){
+   if(L.length()!=0){
+    Node* N = L.backDummy->prev;
+    while( N->prev!=nullptr ){
       this->insertAfter(N->data);
       N = N->prev;
+    }
    }
+   
    //std::cout << L.to_string(); 
    //std::cout << this->to_string(); 
 }
@@ -344,7 +347,8 @@ List::~List(){
                    M = M->next;
                    num_elements--;
                    delete temp;
-                   if(pos_cursor <= i){
+                   if(pos_cursor >= i){
+                        i--;
                         pos_cursor--;
                    }
                 }
@@ -357,10 +361,10 @@ List::~List(){
    // the elements of L. The cursor in the returned List will be at postion 0.
    List List::concat(const List& L) const{
         List M;
-        Node* N = this->backDummy->prev;
-        while( N->prev!=nullptr ){
-            M.insertAfter(N->data);
-            N = N->prev;
+        Node* N = this->frontDummy;
+        while( N->next!=backDummy ){
+            N = N->next;
+            M.insertBefore(N->data);
         }
         N = L.frontDummy;
         while(N->next != L.backDummy){
