@@ -1,3 +1,11 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA5
+ * Shuffle.cpp
+ * Client program for List ADT that performs riffle shuffle on a deck
+ ***/
+
 #include<iostream>
 #include<string>
 #include<stdexcept>

@@ -1,7 +1,14 @@
-//-----------------------------------------------------------------------------
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA5
+ * List.cpp
+ * List ADT in C++
+ ***/
+
 // List.cpp
 // Implementation file for List ADT
-//-----------------------------------------------------------------------------
+
 #include<iostream>
 #include<string>
 #include<stdexcept>
