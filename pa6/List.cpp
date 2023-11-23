@@ -26,6 +26,8 @@ List::List(){
    backDummy = new Node(-1);
    beforeCursor = frontDummy;
    afterCursor = backDummy;
+   frontDummy->next = backDummy;
+   backDummy->prev = frontDummy;
    pos_cursor = 0;
    num_elements = 0;
 }
@@ -37,6 +39,8 @@ List::List(const List& L){
    backDummy = new Node(-1);
    beforeCursor = frontDummy;
    afterCursor = backDummy;
+   frontDummy->next = backDummy;
+   backDummy->prev = frontDummy;
    pos_cursor = 0;
    num_elements = 0;
 
@@ -125,6 +129,11 @@ List::~List(){
      while(num_elements != 0){
          this->eraseAfter();   
      }
+    beforeCursor = frontDummy;
+    afterCursor = backDummy;
+   frontDummy->next = backDummy;
+   backDummy->prev = frontDummy;
+
    }
    
    // moveFront()
@@ -387,9 +396,10 @@ List::~List(){
             if(N->next != backDummy){
                 s += std::to_string(N->data) + ", ";
             }else{
-                s += std::to_string(N->data) + ")";
+                s += std::to_string(N->data);
             }
         }
+        s += ")";
         return s;
    }
 

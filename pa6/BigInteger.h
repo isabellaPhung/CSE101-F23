@@ -93,7 +93,7 @@ public:
 
   // operator<<()
   // Inserts string representation of N into stream.
-  friend std::ostream &operator<<(std::ostream &stream, BigInteger N);
+  friend std::ostream &operator<<(std::ostream &stream, BigInteger& N);
 
   // operator==()
   // Returns true if and only if A equals B.
