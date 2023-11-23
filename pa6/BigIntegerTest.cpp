@@ -1,3 +1,11 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA6
+ * BigIntegerTest.cpp
+ * Tester program for BigInteger ADT
+ ***/
+
 #include<iostream>
 #include<string>
 #include<stdexcept>
@@ -6,6 +14,96 @@
 using namespace std;
 
 int main(){
+
+    /**
+    BigInteger A;
+    BigInteger B;
+    BigInteger C;
+    BigInteger D;
+    
+    A = BigInteger("111122223333");
+    B = BigInteger("111122223333");
+    C = BigInteger();
+    D = BigInteger("12348148518469129628889");
+
+    // pos * pos = pos
+    C = A * B;
+    if (C.sign() != 1)
+      printf("1\n");
+    if (!(C == D))
+      printf("2\n");
+
+    // pos * neg = neg
+    B.negate();
+    D.negate();
+    C = A * B;
+    if (C.sign() != -1)
+      printf("3\n");
+    if (!(C == D))
+      printf("4\n");
+
+    B.makeZero();
+    C = A * B;
+    if (C.sign() != 0)
+      printf("5\n");
+
+    return 0;
+    **/
+    
+    /**
+    A = BigInteger("+111122223333");
+    B = BigInteger("+222211110000");
+
+    // pos + pos = pos
+    D = BigInteger("+333333333333");
+    C = A + B;
+
+    if (!(C == D))
+      cout<< "1\n"<<endl;
+
+    // add a positive and a negative integer
+    //-> pos + neg = 0
+    B = BigInteger("-111122223333");
+    C = A + B;
+    //cout<<C<<endl;
+    //cout<<"C signum: "<<C.sign()<<endl;
+
+    if (C.sign() != 0)
+      cout<< "2\n"<<endl;
+
+    //-> pos + neg > 0
+    B = BigInteger("-110122223333");
+    D = BigInteger("1000000000");
+    C = A + B;
+    if (C.sign() != 1)
+      return 31;
+    if (!(C == D))
+      return 32;
+
+    //-> pos + neg < 0
+    B = BigInteger("-112122223333");
+    D = BigInteger("-1000000000");
+    C = A + B;
+    if (C.sign() != -1)
+      cout<< "41\n"<<endl;
+    if (!(C == D))
+      cout<< "42\n"<<endl;
+
+    //printf("start\n");
+    //-> neg + neg = neg
+    A = BigInteger("-221211110000");
+    D = BigInteger("-333333333333");
+    C = A + B;
+    //cout<<"C:"<<C<<endl;
+    //cout<<"D:"<<D<<endl;
+    
+    if (!(C == D))
+      cout<< "5\n"<<endl;
+
+    return 0;
+    **/ 
+
+    
     BigInteger test = BigInteger("12345");
     cout<< test <<endl;
     test = BigInteger("-123456");
@@ -96,10 +194,16 @@ int main(){
     cout << "12345*-12345=" <<sum << endl;
     
     test3 = BigInteger("-123456");
+    //cout << test3<< endl;
     test4 = BigInteger("-123456");
     sum = test4*test3;
     cout << "-123456*-123456=" <<sum << endl;
 
+    test3 = BigInteger("-41085449");
+    test4 = BigInteger("7402779357");
+    cout << test4<< endl;
+    sum = test4+test3;
+    cout << "-41085449+7402779357=" <<sum << endl;
 
     /**
     //testing with strings, substrings and strtol

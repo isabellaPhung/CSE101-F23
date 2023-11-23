@@ -1,9 +1,17 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA6
+ * BigIntegerTest.cpp
+ * Implementation for BigInteger ADT
+ ***/
+
 #include<stdexcept>
 #include "BigInteger.h"
 #include<cmath>
 #include<algorithm>
 
-const int power = 3;
+const int power = 9;
 const int base = pow(10, power);
 
 // BigInteger()
@@ -17,7 +25,6 @@ BigInteger::BigInteger(){
 // BigInteger()
 // Constructor that creates a new BigInteger from the long value x.
 BigInteger::BigInteger(long x){
-    //List digits;
     if(x==0){
         signum = 0;
         return;
@@ -60,40 +67,13 @@ void stringToList(std::string s, List& L){
             L.insertBefore(value); 
         }
     }
-
-/**
-    int substrings;
-    if(s.length()%2==0){
-        substrings = s.length()/power;
-    }else{
-        substrings = s.length()/power + 1;
+    
+    //removing 0s at front
+    L.moveBack();
+    while(L.movePrev() == 0 && L.position() != 0){
+        L.eraseAfter();
     }
-    std::string substring = "";
-    const char* charString;
-    char* endptr;
-    long value;
 
-    std::cout<<"substrings "<<substrings<<std::endl;
-    for(int i = 0; i < substrings; i++){
-        if(s.length() > power){
-            substring = s.substr(s.length()-power);
-            s = s.substr(0, s.length()-power);
-        }else{
-            substring = s;
-            std::cout<<"value: "<<value<<std::endl;
-        }
-        charString = substring.c_str();
-        value = strtol(charString, &endptr, 10);
-        std::cout<<"val? "<<value<<std::endl;
-        if (endptr == charString) {
-            throw std::invalid_argument("BigInteger: Constructor: non-numeric string");
-        } else if (*endptr != '\0') {
-            throw std::invalid_argument("BigInteger: Constructor: non-numeric string");
-        } else {
-            L.insertBefore(value); 
-        }
-    }
-**/
 }
 
 // BigInteger()
@@ -118,13 +98,14 @@ BigInteger::BigInteger(std::string s){
         throw std::invalid_argument("BigInteger: Constructor: non numeric string");
     }
     stringToList(s, digits);
+
 }
 
 // BigInteger()
 // Constructor that creates a copy of N.
 BigInteger::BigInteger(const BigInteger& N){
    signum = N.signum;
-   List digits = N.digits;
+   digits = List(N.digits);
 }
 
 // Optional Destuctor
@@ -148,30 +129,29 @@ void negateList(List& L){
 // Overwrites the state of S with A + sgn*B (considered as vectors). 
 // Used by both sum() and sub(). 
 void sumList(List& S, List A, List B, int sgn){
-    std::cout<<"A: "<<A<<std::endl;
-    std::cout<<"B: "<<B<<std::endl;
     A.moveFront();
     B.moveFront();
     long valueA;
     long valueB;
     S.clear();
-    //printf("S.position(): %d\n", S.position());
     while(A.position() != A.length() && B.position() != B.length()){ 
-        //printf("guh\n"); 
         valueA = A.moveNext();
         valueB = B.moveNext();
         S.insertBefore(valueA + sgn*valueB); 
-        //printf("geh\n"); 
-    }
-    while(A.position() != A.length()){
-        S.insertBefore(A.moveNext());
     }
 
-    //std::cout<<"gooh"<<B<<std::endl;
-    while(B.position() != B.length()){
-        S.insertBefore(sgn*B.moveNext());
-        //std::cout<<"guh"<<S<<std::endl;
+    long value;
+    while(A.position() != A.length()){
+        value = A.moveNext();
+        S.insertBefore(value);
     }
+    
+    while(B.position() != B.length()){
+        value = sgn*B.moveNext();
+        S.insertBefore(value);
+    }
+    
+    //erasing 0s at front
     S.moveBack();
     while(S.movePrev() == 0 && S.position() != 0){
         S.eraseAfter();
@@ -200,16 +180,11 @@ int normalizeList(List& L){
             L.setBefore(value + carry); 
             carry = -1;
         }else{//positive normalization
-
-            //printf("value mod base: %ld\n", value%base);
-            //printf("carry: %d\n", carry);
             L.setBefore((value+carry) % base);
-            //printf("uh: %ld\n", L.peekPrev());
             carry = (value+carry) / base; 
             if(L.peekPrev() == L.back() && carry > 0){//if at end of list, create node for list
                 L.insertAfter(carry);
             }
-            //std::cout<<"final L: "<<L<<std::endl;
         }
     }
     return returnVal;
@@ -224,24 +199,10 @@ void shiftList(List& L, int p){
     for(int i = 0; i < p; i++){
         L.insertBefore(0);
     }
-    /** 
-    std::string s = "";
-    while(L.position()!=0){
-        s = s + std::to_string(L.movePrev());    
-    }
-
-    //append 0s to it
-    for(int i = 0; i<p; i++){
-        s = s + "0";
-    }
-    //convert back to list
-    L.clear();
-    stringToList(s, L);
-    **/
 }
  
 // scalarMultList() 
-// Multiplies L (considered as a vector) by m. Used by mult(). 
+// Multiplies L (considered as a vector) by m. Used mult(). 
 void scalarMultList(List& L, ListElement m){
     L.moveFront();
     long value;
@@ -346,8 +307,10 @@ BigInteger BigInteger::add(const BigInteger& N) const{
         sum = N;
         return sum;
     }
-
-    if(compare(N) == 0 && signum != N.signum){ // if total = 0
+   
+    BigInteger Ncopy = BigInteger(N);
+    Ncopy.negate();
+    if(compare(Ncopy) == 0){ // if total = 0
         sum.signum = 0;
         return sum;
     }
@@ -360,9 +323,13 @@ BigInteger BigInteger::add(const BigInteger& N) const{
         sum.signum = normalizeList(sum.digits);
     }else{
         sumList(sum.digits, digits, N.digits, 1);
-        sum.signum = normalizeList(sum.digits);
+        normalizeList(sum.digits);
+        if(signum == 1){
+            sum.signum = 1;
+        }else{
+            sum.signum = -1;
+        }
     }
-    //std::cout << sum << std::endl;
     return sum;
 }
 
@@ -381,7 +348,7 @@ BigInteger BigInteger::sub(const BigInteger& N) const{
         return difference;
     }
 
-    if(compare(N) == 0 && signum == N.signum){ // if total = 0
+    if(compare(N) == 0){ // if total = 0
         difference.signum = 0;
         return difference;
     }
@@ -399,7 +366,6 @@ BigInteger BigInteger::sub(const BigInteger& N) const{
         sumList(difference.digits, digits, N.digits, -1);
         difference.signum = normalizeList(difference.digits);
     }
-    //std::cout << difference << std::endl;
     return difference;
 }
 
@@ -416,13 +382,8 @@ void multList(List& S, List A, List B){
     while(lesser.position() != lesser.length()){
         C = greater;
         scalarMultList(C, lesser.moveNext());
-        //std::cout<<"pre shift C: "<<C<<std::endl;        
         shiftList(C, shift);
-        //printf("kill me: %d\n", S.length());
-
-        //std::cout<<"postshift C: "<<C<<std::endl;
         sumList(S, S, C, 1);
-        //std::cout<< "S after sum: " << S << std::endl;
         normalizeList(S);
         shift++;
     }
@@ -432,12 +393,10 @@ void multList(List& S, List A, List B){
 // Returns a BigInteger representing the product of this and N. 
 BigInteger BigInteger::mult(const BigInteger& N) const{
     BigInteger sum;
-
-    //BigInteger test3 = BigInteger("45");
-    //shiftList(test3.digits, 2);
-    //std::cout << test3 <<std::endl;
-     
-    //std::cout<<sum.signum<<std::endl;        
+    
+    if(signum == 0 || N.signum == 0){
+        return sum;
+    }
     multList(sum.digits, digits, N.digits); 
     if(signum != N.signum){
         sum.signum = -1;    
@@ -464,15 +423,15 @@ std::string BigInteger::to_string(){
             s += "-";
         }
         (this->digits).moveBack();
-        long value;
+        std::string value;
         for(int i = 0; i<(this->digits).length(); i++){
-            value = digits.movePrev();
-            if(value < pow(10, power-1) && i != 0){
-                for(int j = 0; j<power-1; j++){
-                    s+="0";
+            value = std::to_string(digits.movePrev());
+            if(value.length()<power && i != 0){
+                while(value.length()!=power){
+                    value = "0" + value;
                 }
             }
-            s+=std::to_string(value);
+            s+=value;
         }
     }
 

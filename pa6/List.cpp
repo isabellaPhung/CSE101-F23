@@ -1,3 +1,11 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA6
+ * List.cpp
+ * Implementation for List ADT
+ ***/
+
 //-----------------------------------------------------------------------------
 // List.cpp
 // Implementation file for List ADT
@@ -16,7 +24,6 @@ List::Node::Node(ListElement x){
    next = nullptr;
    prev = nullptr;
 }
-
 
 // Class Constructors & Destructors -------------------------------------------
 
@@ -161,7 +168,7 @@ List::~List(){
             throw std::range_error("List: moveNext(): cursor at back");
         }
         
-        int data = afterCursor -> data;
+        ListElement data = afterCursor -> data;
         beforeCursor = afterCursor;
         afterCursor = afterCursor->next;
         pos_cursor++;
@@ -176,7 +183,7 @@ List::~List(){
         if(pos_cursor <= 0){
             throw std::range_error("List: movePrev(): cursor at front");
         }
-        int data = beforeCursor -> data;
+        ListElement data = beforeCursor -> data;
         afterCursor=beforeCursor;
         beforeCursor = beforeCursor->prev;
         pos_cursor--;
