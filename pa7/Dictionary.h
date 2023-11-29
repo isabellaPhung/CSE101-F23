@@ -38,6 +38,10 @@ private:
    int   num_pairs;
 
    // Helper Functions (Optional) ---------------------------------------------
+   
+   // transplant()
+   // swaps and places nodes in specified locations
+   void transplant(Node* u, Node* v);
 
    // inOrderString()
    // Appends a string representation of the tree rooted at R to string s. The

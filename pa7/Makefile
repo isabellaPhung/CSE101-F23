@@ -45,3 +45,5 @@ $(MAIN)Check: $(MAIN)
 $(ADT)Check: $(ADT_TEST)
 	$(MEMCHECK) $(ADT_TEST)
 
+format :
+	clang-format-15 -i -style=file *.[cpph]
