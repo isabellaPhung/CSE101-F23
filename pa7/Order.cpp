@@ -4,7 +4,7 @@
  * 2023 Fall CSE 101 PA7
  * Order.cpp
  * Client program for Dictionary ADT. Reads file 
- * and places lines in a Dictionary.
+ * and places lines alphabetically in a Dictionary with line numbers.
  ***/
 
 #include<iostream>
@@ -37,8 +37,15 @@ int main(int argc, char * argv[]){
       cerr << "Unable to open file " << argv[2] << " for writing" << endl;
       return(EXIT_FAILURE);
    }
-
-   getline(in, line);
+    
+   Dictionary A;
+   int linenum = 0;
+   while(getline(in, line)){
+        linenum++; 
+        A.setValue(line, linenum);
+   }
+   out<<A<<endl;
+   out<<A.pre_string()<<endl;
 
 // close files 
    in.close();

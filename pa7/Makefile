@@ -12,12 +12,12 @@ MAIN           = Order
 ADT            = Dictionary
 SOURCE         = $(MAIN).cpp
 OBJECT         = $(MAIN).o
-ADT_TEST       = $(ADT)Client
+ADT_TEST       = $(ADT)Test
 ADT_SOURCE     = $(ADT).cpp
 ADT_OBJECT     = $(ADT).o
 ADT_HEADER     = $(ADT).h
-COMPILE        = g++ -std=c++17 -Wall -c
-LINK           = g++ -std=c++17 -Wall -o
+COMPILE        = g++ -g -std=c++17 -Wall -c
+LINK           = g++ -g -std=c++17 -Wall -o
 REMOVE         = rm -f
 MEMCHECK       = valgrind --leak-check=full
 

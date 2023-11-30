@@ -7,6 +7,7 @@
  ***/
 
 #include<stdexcept>
+#include<string>
 #include "Dictionary.h"
 
 // node constructor
@@ -52,7 +53,7 @@ void Dictionary::inOrderString(std::string& s, Node* R) const{
 // by a pre-order tree walk.
 void Dictionary::preOrderString(std::string& s, Node* R) const{
     if(R != nil){
-        s += R->key + " : " + std::to_string(R->val) + "\n";
+        s += R->key + "\n";
         preOrderString(s, R->left);
         preOrderString(s, R->right);
     }
@@ -123,6 +124,9 @@ Dictionary::Node* Dictionary::findMax(Node* R){
 // Node after N in an in-order tree walk.  If N points to the rightmost 
 // Node, or is nil, returns nil. 
 Dictionary::Node* Dictionary::findNext(Node* N){
+    if(N == nil || N == findMax(root)){
+        return nil;
+    }
     if(N->right != nil){
         return findMin(N->right);
     }
@@ -139,6 +143,9 @@ Dictionary::Node* Dictionary::findNext(Node* N){
 // Node before N in an in-order tree walk.  If N points to the leftmost 
 // Node, or is nil, returns nil.
 Dictionary::Node* Dictionary::findPrev(Node* N){
+    if(N == nil || N == findMin(root)){
+        return nil;
+    }
     if(N->left != nil){
         return findMax(N->left);
     }
@@ -214,6 +221,9 @@ bool Dictionary::hasCurrent() const{
 // Returns the current key.
 // Pre: hasCurrent() 
 keyType Dictionary::currentKey() const{
+    if(!hasCurrent()){
+        throw std::invalid_argument("Dictionary: currentKey(): current undefined");
+    }
     return current->key;
 }
 
@@ -221,6 +231,9 @@ keyType Dictionary::currentKey() const{
 // Returns a reference to the current value.
 // Pre: hasCurrent()
 valType& Dictionary::currentVal() const{
+    if(!hasCurrent()){
+        throw std::invalid_argument("Dictionary: currentVal(): current undefined");
+    }
     return current->val;
 }
 
@@ -240,11 +253,15 @@ void Dictionary::clear(){
 // If a pair with key==k exists, overwrites the corresponding value with v, 
 // otherwise inserts the new pair (k, v).
 void Dictionary::setValue(keyType k, valType v){
+    //printf("contains: %d\n", contains(k));
     if(contains(k)){//overwrite
         Node* n = search(root, k); 
         n->val = v; 
     }else{//add new node
-        Node* newNode = new Node(k, v);
+        Node* z = new Node(k, v);
+        z->parent = nil;
+        z->left = nil;
+        z->right = nil;
         Node* y=nil;
         Node* x = root;
         while(x != nil){
@@ -255,14 +272,16 @@ void Dictionary::setValue(keyType k, valType v){
                 x = x->right;
             }
         }
-        newNode->parent = y;
+
+        z->parent = y;
         if(y == nil){
-            root = newNode;
+            root = z;
         }else if(k < y->key){
-            y->left = newNode;
+            y->left = z;
         }else{
-            y->right = newNode;
+            y->right = z;
         }
+        num_pairs++;
     }
 }
 
@@ -274,6 +293,9 @@ void Dictionary::setValue(keyType k, valType v){
 void Dictionary::remove(keyType k){
     if(!contains(k)){
         throw std::invalid_argument("Dictionary: remove(): key \""+k+"\" does not exist");
+    }
+    if(hasCurrent() && currentKey() == k){//if cursor on pair, cursor becomes undefined
+        current = nil;
     }
     Node* n = search(root, k);
     if(n->left == nil){
@@ -291,6 +313,7 @@ void Dictionary::remove(keyType k){
         y->left = n->left;
         y->left->parent = y;
     }
+    num_pairs--;
 }
 
 // begin()
@@ -314,7 +337,7 @@ void Dictionary::end(){
 // Pre: hasCurrent()
 void Dictionary::next(){
     if(!hasCurrent()){
-        throw std::invalid_argument("Dictionary: next(): undefined current");
+        throw std::invalid_argument("Dictionary: next(): current undefined");
     }
 
     current = findNext(current);
@@ -327,7 +350,7 @@ void Dictionary::next(){
 // Pre: hasCurrent()
 void Dictionary::prev(){
     if(!hasCurrent()){
-        throw std::invalid_argument("Dictionary: prev(): undefined current");
+        throw std::invalid_argument("Dictionary: prev(): current undefined");
     }
 
     current = findPrev(current);
@@ -390,6 +413,7 @@ Dictionary& Dictionary::operator=( const Dictionary& D ){
         std::swap(root, temp.root);
         std::swap(current, temp.current);
         std::swap(num_pairs, temp.num_pairs);
+        std::swap(nil, temp.nil);
     }
     return *this;
 }
