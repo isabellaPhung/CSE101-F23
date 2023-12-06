@@ -21,8 +21,16 @@ LINK           = g++ -g -std=c++17 -Wall -o
 REMOVE         = rm -f
 MEMCHECK       = valgrind --leak-check=full
 
+all: WordFrequency Order
+
 $(MAIN): $(OBJECT) $(ADT_OBJECT)
 	$(LINK) $(MAIN) $(OBJECT) $(ADT_OBJECT)
+
+Order: Order.o Dictionary.o
+	$(LINK) Order Order.o Dictionary.o
+
+Order.o: Order.cpp Dictionary.h
+	$(COMPILE) Order.cpp
 
 $(ADT_TEST): $(ADT_TEST).o $(ADT_OBJECT)
 	$(LINK) $(ADT_TEST) $(ADT_TEST).o $(ADT_OBJECT)
@@ -37,7 +45,7 @@ $(ADT_OBJECT): $(ADT_SOURCE) $(ADT_HEADER)
 	$(COMPILE) $(ADT_SOURCE)
 
 clean:
-	$(REMOVE) $(MAIN) $(ADT_TEST) $(OBJECT) $(ADT_TEST).o $(ADT_OBJECT)
+	$(REMOVE) $(MAIN) $(ADT_TEST) $(OBJECT) $(ADT_TEST).o $(ADT_OBJECT) Order Order.o
 
 $(MAIN)Check: $(MAIN)
 	$(MEMCHECK) $(MAIN) Gutenberg myGutenberg-out
