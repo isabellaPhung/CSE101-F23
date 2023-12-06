@@ -1,11 +1,12 @@
 /***
  * Isabella Phung
  * itphung
- * 2023 Fall CSE 101 PA7
- * Order.cpp
+ * 2023 Fall CSE 101 PA8
+ * WordFrequency.cpp
  * Client program for Dictionary ADT. Reads file 
- * and places lines alphabetically in a Dictionary with line numbers.
+ * and counts frequency of word appearence.
  ***/
+
 #include<iostream>
 #include<fstream>
 #include<string>

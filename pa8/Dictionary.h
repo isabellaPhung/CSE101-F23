@@ -1,3 +1,11 @@
+/***
+ * Isabella Phung
+ * itphung
+ * 2023 Fall CSE 101 PA8
+ * Dictionary.h
+ * Header file for Dictionary ADT
+ ***/
+
 //-----------------------------------------------------------------------------
 // Dictionary.h
 // Header file for Dictionary ADT based on a Red-Black Tree. Includes a
